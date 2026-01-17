@@ -2,165 +2,171 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
+<title>Yogito HTML Editör</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>%100 Virüssüz APK</title>
+
 <style>
-body{
-    margin:0;
-    font-family: Arial, sans-serif;
-    background:#111;
-    color:#fff;
+body {
+    margin: 0;
+    font-family: monospace;
+    background: #1e1e1e;
+    color: white;
 }
-.header{
-    background:linear-gradient(90deg,#00ffcc,#0066ff);
-    padding:20px;
-    text-align:center;
-    font-size:22px;
-    font-weight:bold;
+
+header {
+    background: #111;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
 }
-.container{
-    padding:20px;
-    text-align:center;
+
+.top {
+    display: flex;
+    padding: 5px;
+    background: #181818;
 }
-.sub{
-    font-size:20px;
-    margin-top:10px;
+
+input {
+    flex: 1;
+    padding: 8px;
+    background: #000;
+    color: #00ff90;
+    border: none;
+    outline: none;
 }
-.maker{
-    margin-top:10px;
-    color:#aaa;
+
+button {
+    background: #ffcc00;
+    border: none;
+    padding: 8px 12px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 6px;
+    margin-left: 5px;
 }
-button{
-    margin-top:20px;
-    padding:12px 25px;
-    font-size:18px;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
+
+.container {
+    display: flex;
+    height: calc(100vh - 160px);
 }
-.download{
-    background:crimson;
-    color:white;
+
+textarea {
+    width: 50%;
+    background: #0d0d0d;
+    color: #00ff90;
+    border: none;
+    outline: none;
+    padding: 10px;
+    resize: none;
 }
-.ad{
-    position:fixed;
-    bottom:0;
-    width:100%;
-    background:#222;
-    color:#ff00ff;
-    text-align:center;
-    padding:10px;
-    cursor:pointer;
+
+iframe {
+    width: 50%;
+    border: none;
+    background: white;
 }
-.popup, .fullscreen{
-    position:fixed;
-    top:0;left:0;
-    width:100%;height:100%;
-    background:rgba(0,0,0,0.9);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    z-index:999;
-    text-align:center;
+
+.history {
+    background: #111;
+    padding: 10px;
+    height: 90px;
+    overflow-y: auto;
 }
-.box{
-    background:#222;
-    padding:20px;
-    border-radius:10px;
-    max-width:300px;
+
+.history div {
+    cursor: pointer;
+    padding: 5px;
+    border-bottom: 1px solid #333;
 }
-.fullscreen{
-    font-size:40px;
-    font-weight:bold;
+
+.history div:hover {
+    background: #222;
 }
-.red{background:red;}
-.blue{background:#007bff;}
-.green{background:#0f0;}
 </style>
 </head>
+
 <body>
 
-<div class="header">%100 Virüssüz APK Dosyalar</div>
+<header>
+🧪 Yogito HTML Editör | Kaydetmeli 🔥
+</header>
 
-<div class="container">
-    <div class="sub">purno</div>
-    <div class="sub">Gədçek maykıraft</div>
-    <div class="maker">Yapımcı: Moyjang</div>
-    <button class="download" onclick="indir()">İndir</button>
+<div class="top">
+<input id="title" placeholder="Başlık gir len (örn: Deneme Site)">
+<button onclick="kaydet()">Kaydet</button>
+<button onclick="indir()">HTML İndir</button>
 </div>
 
-<div class="ad" onclick="reklam()">
-    pø4ñó.izle.xyz
+<div class="container">
+<textarea id="code">
+<!DOCTYPE html>
+<html>
+<head>
+<title>Test</title>
+</head>
+<body>
+<h1>Selam Yiğit 😎</h1>
+<p>Bu kaydedilebilir editör</p>
+</body>
+</html>
+</textarea>
+
+<iframe id="preview"></iframe>
+</div>
+
+<div class="history" id="history">
+<b>📜 Geçmiş:</b>
 </div>
 
 <script>
-function reklam(){
-    document.body.innerHTML += `
-    <div class="popup">
-        <div class="box">
-            <p>مرحبا هذا إعلان عشوائي جدا لا معنى له 😂</p>
-            <button onclick="this.parentElement.parentElement.remove()">Kapat</button>
-        </div>
-    </div>`;
+function calistir() {
+    document.getElementById("preview").srcdoc =
+        document.getElementById("code").value;
 }
 
-function indir(){
-    let sure = 20;
-    document.body.innerHTML = `
-        <div class="fullscreen">
-            Yükleniyor... <br><span id="sayac">${sure}</span>s
-        </div>`;
-    let int = setInterval(()=>{
-        sure--;
-        document.getElementById("sayac").innerText = sure;
-        if(sure<=0){
-            clearInterval(int);
-            document.body.innerHTML = `
-            <div class="fullscreen">
-                <button onclick="kur()">Kur</button>
-            </div>`;
-        }
-    },1000);
+function kaydet() {
+    const baslik = document.getElementById("title").value;
+    const kod = document.getElementById("code").value;
+
+    if (!baslik) {
+        alert("Başlık gir lan 😒");
+        return;
+    }
+
+    let liste = JSON.parse(localStorage.getItem("kodlar") || "[]");
+    liste.push({ baslik, kod });
+    localStorage.setItem("kodlar", JSON.stringify(liste));
+    gecmisYukle();
 }
 
-function kur(){
-    ekran("Mojang™","red",5000,()=>{
-        ekran("Nokia","blue",2000,()=>{
-            ekran("Android<br><small>android</small>","green",3000,()=>{
-                defender();
-            });
-        });
+function gecmisYukle() {
+    const history = document.getElementById("history");
+    history.innerHTML = "<b>📜 Geçmiş:</b>";
+
+    let liste = JSON.parse(localStorage.getItem("kodlar") || "[]");
+    liste.forEach((item, i) => {
+        const div = document.createElement("div");
+        div.textContent = item.baslik;
+        div.onclick = () => {
+            document.getElementById("title").value = item.baslik;
+            document.getElementById("code").value = item.kod;
+            calistir();
+        };
+        history.appendChild(div);
     });
 }
 
-function ekran(yazi,renk,sure,cb){
-    document.body.innerHTML = `
-    <div class="fullscreen ${renk}">
-        ${yazi}
-    </div>`;
-    setTimeout(cb,sure);
+function indir() {
+    const kod = document.getElementById("code").value;
+    const blob = new Blob([kod], { type: "text/html" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "index.html";
+    a.click();
 }
 
-function defender(){
-    document.body.innerHTML += `
-    <div class="popup">
-        <div class="box">
-            <h3>Microsoft Defender</h3>
-            <p>Cihazınızda 183828 virüs bulundu!</p>
-            <button onclick="temizle()">Temizle</button>
-        </div>
-    </div>`;
-}
-
-function temizle(){
-    document.body.innerHTML += `
-    <div class="popup">
-        <div class="box">
-            <p>Bu da virüstü .d</p>
-            <button onclick="location.reload()">Bitir</button>
-        </div>
-    </div>`;
-}
+calistir();
+gecmisYukle();
 </script>
 
 </body>
