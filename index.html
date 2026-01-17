@@ -1,19 +1,167 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <title>Yogito-lang | Ana Sayfa</title>
-    <style>
-        body { font-family: sans-serif; text-align: center; background-color: #f4f4f4; padding: 50px; }
-        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: inline-block; }
-        h1 { color: #0969da; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>%100 Virüssüz APK</title>
+<style>
+body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    background:#111;
+    color:#fff;
+}
+.header{
+    background:linear-gradient(90deg,#00ffcc,#0066ff);
+    padding:20px;
+    text-align:center;
+    font-size:22px;
+    font-weight:bold;
+}
+.container{
+    padding:20px;
+    text-align:center;
+}
+.sub{
+    font-size:20px;
+    margin-top:10px;
+}
+.maker{
+    margin-top:10px;
+    color:#aaa;
+}
+button{
+    margin-top:20px;
+    padding:12px 25px;
+    font-size:18px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+.download{
+    background:crimson;
+    color:white;
+}
+.ad{
+    position:fixed;
+    bottom:0;
+    width:100%;
+    background:#222;
+    color:#ff00ff;
+    text-align:center;
+    padding:10px;
+    cursor:pointer;
+}
+.popup, .fullscreen{
+    position:fixed;
+    top:0;left:0;
+    width:100%;height:100%;
+    background:rgba(0,0,0,0.9);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+    text-align:center;
+}
+.box{
+    background:#222;
+    padding:20px;
+    border-radius:10px;
+    max-width:300px;
+}
+.fullscreen{
+    font-size:40px;
+    font-weight:bold;
+}
+.red{background:red;}
+.blue{background:#007bff;}
+.green{background:#0f0;}
+</style>
 </head>
 <body>
-    <div class="card">
-        <h1>🚀 Siteme Hoş Geldiniz!</h1>
-        <p>Ben <strong>yogito-lang</strong>. Bu site GitHub Pages ile oluşturuldu.</p>
-    </div>
+
+<div class="header">%100 Virüssüz APK Dosyalar</div>
+
+<div class="container">
+    <div class="sub">purno</div>
+    <div class="sub">Gədçek maykıraft</div>
+    <div class="maker">Yapımcı: Ahmed Mussin</div>
+    <button class="download" onclick="indir()">İndir</button>
+</div>
+
+<div class="ad" onclick="reklam()">
+    pø4ñó.izle.xyz
+</div>
+
+<script>
+function reklam(){
+    document.body.innerHTML += `
+    <div class="popup">
+        <div class="box">
+            <p>مرحبا هذا إعلان عشوائي جدا لا معنى له 😂</p>
+            <button onclick="this.parentElement.parentElement.remove()">Kapat</button>
+        </div>
+    </div>`;
+}
+
+function indir(){
+    let sure = 20;
+    document.body.innerHTML = `
+        <div class="fullscreen">
+            Yükleniyor... <br><span id="sayac">${sure}</span>s
+        </div>`;
+    let int = setInterval(()=>{
+        sure--;
+        document.getElementById("sayac").innerText = sure;
+        if(sure<=0){
+            clearInterval(int);
+            document.body.innerHTML = `
+            <div class="fullscreen">
+                <button onclick="kur()">Kur</button>
+            </div>`;
+        }
+    },1000);
+}
+
+function kur(){
+    ekran("Mojang™","red",5000,()=>{
+        ekran("Nokia","blue",2000,()=>{
+            ekran("Android<br><small>android</small>","green",3000,()=>{
+                defender();
+            });
+        });
+    });
+}
+
+function ekran(yazi,renk,sure,cb){
+    document.body.innerHTML = `
+    <div class="fullscreen ${renk}">
+        ${yazi}
+    </div>`;
+    setTimeout(cb,sure);
+}
+
+function defender(){
+    document.body.innerHTML += `
+    <div class="popup">
+        <div class="box">
+            <h3>Microsoft Defender</h3>
+            <p>Cihazınızda 183828 virüs bulundu!</p>
+            <button onclick="temizle()">Temizle</button>
+        </div>
+    </div>`;
+}
+
+function temizle(){
+    document.body.innerHTML += `
+    <div class="popup">
+        <div class="box">
+            <p>Bu da virüstü .d</p>
+            <button onclick="location.reload()">Bitir</button>
+        </div>
+    </div>`;
+}
+</script>
+
 </body>
 </html>
-
