@@ -2,172 +2,187 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Yogito HTML Editör</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Üçler Ortaokulu Öğrenci Sitesi</title>
 
 <style>
-body {
-    margin: 0;
-    font-family: monospace;
-    background: #1e1e1e;
-    color: white;
+body{
+  margin:0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to bottom,#fff9c4,#ffe082);
 }
 
-header {
-    background: #111;
-    padding: 10px;
-    text-align: center;
-    font-weight: bold;
+header{
+  background:#ffeb3b;
+  padding:25px;
+  text-align:center;
+  font-size:28px;
+  font-weight:bold;
+  box-shadow:0 4px 8px rgba(0,0,0,.2);
 }
 
-.top {
-    display: flex;
-    padding: 5px;
-    background: #181818;
+main{
+  max-width:600px;
+  margin:30px auto;
+  background:#fff;
+  padding:20px;
+  border-radius:15px;
+  box-shadow:0 10px 25px rgba(0,0,0,.2);
 }
 
-input {
-    flex: 1;
-    padding: 8px;
-    background: #000;
-    color: #00ff90;
-    border: none;
-    outline: none;
+input,button{
+  padding:10px;
+  margin:6px;
+  border-radius:8px;
+  border:1px solid #ccc;
 }
 
-button {
-    background: #ffcc00;
-    border: none;
-    padding: 8px 12px;
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 6px;
-    margin-left: 5px;
+button{
+  background:#ffeb3b;
+  border:none;
+  cursor:pointer;
+  font-weight:bold;
 }
 
-.container {
-    display: flex;
-    height: calc(100vh - 160px);
+button:hover{
+  background:#ffe000;
 }
 
-textarea {
-    width: 50%;
-    background: #0d0d0d;
-    color: #00ff90;
-    border: none;
-    outline: none;
-    padding: 10px;
-    resize: none;
+.post{
+  background:#fffde7;
+  border:1px solid #ffeb3b;
+  padding:10px;
+  border-radius:10px;
+  margin:15px 0;
 }
 
-iframe {
-    width: 50%;
-    border: none;
-    background: white;
+img{
+  max-width:100%;
+  border-radius:10px;
+  margin-top:10px;
 }
 
-.history {
-    background: #111;
-    padding: 10px;
-    height: 90px;
-    overflow-y: auto;
+/* gizli alanlar */
+#site,#adminPanel,#adminLogin{
+  display:none;
 }
 
-.history div {
-    cursor: pointer;
-    padding: 5px;
-    border-bottom: 1px solid #333;
-}
-
-.history div:hover {
-    background: #222;
+/* gizli admin butonu */
+#adminToggle{
+  position:fixed;
+  bottom:10px;
+  right:10px;
+  font-size:22px;
+  background:#000;
+  color:#fff;
+  width:40px;
+  height:40px;
+  border-radius:50%;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-🧪 Yogito HTML Editör | Kaydetmeli 🔥
-</header>
+<header>Üçler Ortaokulu Öğrenci Sitesi</header>
 
-<div class="top">
-<input id="title" placeholder="Başlık gir len (örn: Deneme Site)">
-<button onclick="kaydet()">Kaydet</button>
-<button onclick="indir()">HTML İndir</button>
+<main>
+
+<!-- CAPTCHA -->
+<div id="captchaBox">
+  <h3>Robot Doğrulama</h3>
+  <p>Kodu yaz:</p>
+  <div id="captchaCode" style="font-size:22px;color:red;font-weight:bold;"></div>
+  <input id="captchaInput" placeholder="Kodu gir">
+  <button onclick="checkCaptcha()">Doğrula</button>
+  <p id="captchaMsg"></p>
 </div>
 
-<div class="container">
-<textarea id="code">
-<!DOCTYPE html>
-<html>
-<head>
-<title>Test</title>
-</head>
-<body>
-<h1>Selam Yiğit 😎</h1>
-<p>Bu kaydedilebilir editör</p>
-</body>
-</html>
-</textarea>
-
-<iframe id="preview"></iframe>
+<!-- SİTE -->
+<div id="site">
+  <h2>Paylaşımlar</h2>
+  <div id="posts"></div>
 </div>
 
-<div class="history" id="history">
-<b>📜 Geçmiş:</b>
+<!-- ADMIN -->
+<div id="adminLogin">
+  <h3>Admin Girişi</h3>
+  <input id="adminUser" placeholder="Kullanıcı">
+  <input id="adminPass" type="password" placeholder="Şifre">
+  <button onclick="adminLogin()">Giriş</button>
 </div>
+
+<div id="adminPanel">
+  <h3>Yeni Paylaşım</h3>
+  <input id="postText" placeholder="Metin"><br>
+  <input id="postImg" placeholder="Resim URL"><br>
+  <button onclick="addPost()">Paylaş</button>
+</div>
+
+</main>
+
+<button id="adminToggle" onclick="toggleAdmin()">⚙️</button>
 
 <script>
-function calistir() {
-    document.getElementById("preview").srcdoc =
-        document.getElementById("code").value;
+/* CAPTCHA */
+let captcha = Math.floor(1000 + Math.random()*9000);
+document.getElementById("captchaCode").innerText = captcha;
+
+function checkCaptcha(){
+  if(document.getElementById("captchaInput").value == captcha){
+    document.getElementById("captchaBox").style.display="none";
+    document.getElementById("site").style.display="block";
+    loadPosts();
+  }else{
+    document.getElementById("captchaMsg").innerText="Yanlış len tekrar dene";
+  }
 }
 
-function kaydet() {
-    const baslik = document.getElementById("title").value;
-    const kod = document.getElementById("code").value;
-
-    if (!baslik) {
-        alert("Başlık gir lan 😒");
-        return;
-    }
-
-    let liste = JSON.parse(localStorage.getItem("kodlar") || "[]");
-    liste.push({ baslik, kod });
-    localStorage.setItem("kodlar", JSON.stringify(liste));
-    gecmisYukle();
+/* LOCAL STORAGE */
+function loadPosts(){
+  let posts = JSON.parse(localStorage.getItem("posts") || "[]");
+  let area = document.getElementById("posts");
+  area.innerHTML="";
+  posts.forEach(p=>{
+    let d=document.createElement("div");
+    d.className="post";
+    d.innerHTML=`<p>${p.text}</p>`+(p.img?`<img src="${p.img}">`:"");
+    area.appendChild(d);
+  });
 }
 
-function gecmisYukle() {
-    const history = document.getElementById("history");
-    history.innerHTML = "<b>📜 Geçmiş:</b>";
-
-    let liste = JSON.parse(localStorage.getItem("kodlar") || "[]");
-    liste.forEach((item, i) => {
-        const div = document.createElement("div");
-        div.textContent = item.baslik;
-        div.onclick = () => {
-            document.getElementById("title").value = item.baslik;
-            document.getElementById("code").value = item.kod;
-            calistir();
-        };
-        history.appendChild(div);
-    });
+function addPost(){
+  let text=document.getElementById("postText").value;
+  let img=document.getElementById("postImg").value;
+  let posts=JSON.parse(localStorage.getItem("posts")||"[]");
+  posts.unshift({text, img});
+  localStorage.setItem("posts",JSON.stringify(posts));
+  loadPosts();
+  document.getElementById("postText").value="";
+  document.getElementById("postImg").value="";
 }
 
-function indir() {
-    const kod = document.getElementById("code").value;
-    const blob = new Blob([kod], { type: "text/html" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "index.html";
-    a.click();
+/* ADMIN */
+const ADMIN_USER="admin";
+const ADMIN_PASS="1234";
+
+function toggleAdmin(){
+  let a=document.getElementById("adminLogin");
+  a.style.display = a.style.display=="block"?"none":"block";
 }
 
-calistir();
-gecmisYukle();
+function adminLogin(){
+  if(
+    document.getElementById("adminUser").value===ADMIN_USER &&
+    document.getElementById("adminPass").value===ADMIN_PASS
+  ){
+    document.getElementById("adminPanel").style.display="block";
+    alert("Admin açıldı");
+  }else{
+    alert("Yanlış giriş");
+  }
+}
 </script>
 
 </body>
 </html>
+
